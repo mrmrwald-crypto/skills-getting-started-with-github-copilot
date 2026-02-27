@@ -27,4 +27,27 @@ def test_activities_returns_all_activities():
     assert isinstance(data, dict)
     assert "Chess Club" in data
 
+
+def test_signup_and_remove_signup_for_activity():
+    # Arrange
+    test_email = "testuser@example.com"
+    activity = "Chess Club"
+
+    # Act: まずPOSTで参加登録
+    response_signup = client.post(f"/activities/{activity}/signup", params={"email": test_email})
+    # Assert: 登録成功
+    assert response_signup.status_code == 200
+    assert response_signup.json()["message"].startswith("Signed up")
+
+    # Act: DELETEで登録削除
+    response_delete = client.delete(f"/activities/{activity}/signup", params={"email": test_email})
+    # Assert: 削除成功
+    assert response_delete.status_code == 200
+    assert response_delete.json()["message"].startswith("Removed")
+
+    # Act: もう一度削除（存在しない場合）
+    response_delete2 = client.delete(f"/activities/{activity}/signup", params={"email": test_email})
+    # Assert: 404エラー
+    assert response_delete2.status_code == 404
+
 # 他のエンドポイントがあれば同様にAAAパターンでテストを追加してください。
