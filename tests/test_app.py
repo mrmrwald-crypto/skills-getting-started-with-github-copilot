@@ -36,6 +36,7 @@ def test_signup_and_remove_signup_for_activity():
     # Act: まずPOSTで参加登録
     response_signup = client.post(f"/activities/{activity}/signup", params={"email": test_email})
     # Assert: 登録成功
+    print("DEBUG response_signup.text:", repr(response_signup.text))
     assert response_signup.status_code == 200
     assert response_signup.json()["message"].startswith("Signed up")
 
